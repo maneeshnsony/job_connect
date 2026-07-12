@@ -16,11 +16,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [user, loading, router]);
 
+  const needsVerification = user && !user.google_id && !user.email_verified_at;
+
   useEffect(() => {
-    if (user && !user.email_verified_at && pathname !== '/verify-email') {
+    if (needsVerification && pathname !== '/verify-email') {
       router.push('/verify-email');
     }
-  }, [user, pathname, router]);
+  }, [needsVerification, pathname, router]);
 
   if (loading || !user) {
     return (
@@ -30,7 +32,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     );
   }
 
-  if (!user.email_verified_at && pathname !== '/verify-email') {
+  if (needsVerification && pathname !== '/verify-email') {
     return null;
   }
 
