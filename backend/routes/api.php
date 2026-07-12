@@ -14,6 +14,7 @@ Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
+    Route::patch('/user/theme', [AuthController::class, 'updateTheme']);
 
     Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
         ->name('verification.verify');

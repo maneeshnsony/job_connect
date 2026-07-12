@@ -14,9 +14,23 @@ class OutreachController extends Controller
 {
     public function index(): AnonymousResourceCollection
     {
-        $outreaches = Outreach::where('user_id', auth()->id())
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        $query = Outreach::where('user_id', auth()->id());
+
+        $sortable = ['company', 'sector', 'recruiter', 'msg_sent', 'reply', 'next_action', 'created_at'];
+        $sort = in_array(request('sort'), $sortable) ? request('sort') : 'created_at';
+        $direction = request('direction') === 'asc' ? 'asc' : 'desc';
+
+        foreach (['company', 'sector', 'recruiter'] as $field) {
+            if ($value = request($field)) {
+                $query->where($field, 'like', "%{$value}%");
+            }
+        }
+
+        if ($reply = request('reply')) {
+            $query->where('reply', $reply);
+        }
+
+        $outreaches = $query->orderBy($sort, $direction)->paginate(20);
 
         return OutreachResource::collection($outreaches);
     }

@@ -9,6 +9,7 @@ interface User {
   email: string;
   email_verified_at: string | null;
   google_id?: string | null;
+  theme?: string;
 }
 
 interface AuthContextType {
@@ -38,16 +39,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  function applyTheme(u: User) {
+    if (u.theme === 'dark' || u.theme === 'light') {
+      localStorage.setItem('theme', u.theme);
+      document.documentElement.classList.toggle('dark', u.theme === 'dark');
+    }
+  }
+
   async function fetchUser(t?: string) {
     try {
       const headers = { Authorization: `Bearer ${t || token}` };
       const res = await api.get('/user', { headers });
       setUser(res.data);
-    } catch {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      setToken(null);
-      setUser(null);
+      applyTheme(res.data);
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setToken(null);
+        setUser(null);
+      }
     } finally {
       setLoading(false);
     }
@@ -59,6 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('token', t);
     setToken(t);
     setUser(u);
+    applyTheme(u);
   }
 
   async function register(name: string, email: string, password: string, passwordConfirmation: string) {
@@ -67,6 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('token', t);
     setToken(t);
     setUser(u);
+    applyTheme(u);
   }
 
   async function logout() {

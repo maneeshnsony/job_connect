@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getOutreaches, createOutreach, updateOutreach, deleteOutreach, Outreach } from '@/lib/api';
+import { getOutreaches, createOutreach, updateOutreach, deleteOutreach, Outreach, OutreachFilters } from '@/lib/api';
 import OutreachTable from '@/components/OutreachTable';
 import OutreachModal from '@/components/OutreachModal';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
@@ -13,10 +13,11 @@ export default function DashboardPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingOutreach, setEditingOutreach] = useState<Outreach | null>(null);
   const [deletingOutreach, setDeletingOutreach] = useState<Outreach | null>(null);
+  const [filters, setFilters] = useState<OutreachFilters>({ sort: 'created_at', direction: 'desc' });
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['outreaches'],
-    queryFn: getOutreaches,
+    queryKey: ['outreaches', filters],
+    queryFn: () => getOutreaches(filters),
   });
 
   const createMutation = useMutation({
@@ -59,8 +60,8 @@ export default function DashboardPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-white">Outreach Tracker</h2>
-          <p className="text-gray-400 text-sm mt-1">Manage your recruiter outreach records</p>
+          <h2 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Outreach Tracker</h2>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Manage your recruiter outreach records</p>
         </div>
         <button onClick={() => setShowAddModal(true)} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium text-white transition flex items-center gap-2">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4"/></svg>
@@ -72,6 +73,8 @@ export default function DashboardPage() {
         data={data?.data || []}
         isLoading={isLoading}
         error={error as Error | null}
+        filters={filters}
+        onFilterChange={setFilters}
         onEdit={(outreach) => setEditingOutreach(outreach)}
         onDelete={(outreach) => setDeletingOutreach(outreach)}
       />

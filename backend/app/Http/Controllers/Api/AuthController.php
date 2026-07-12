@@ -67,6 +67,17 @@ class AuthController extends Controller
         return response()->json($request->user());
     }
 
+    public function updateTheme(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'theme' => 'required|string|in:light,dark',
+        ]);
+
+        $request->user()->update($validated);
+
+        return response()->json(['theme' => $validated['theme']]);
+    }
+
     public function googleRedirect(): RedirectResponse
     {
         return Socialite::driver('google')->stateless()->redirect();

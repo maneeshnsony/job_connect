@@ -18,8 +18,17 @@ export interface PaginatedResponse<T> {
   meta: { current_page: number; last_page: number; total: number };
 }
 
-export async function getOutreaches(): Promise<PaginatedResponse<Outreach>> {
-  const res = await api.get('/outreaches');
+export interface OutreachFilters {
+  sort?: string;
+  direction?: string;
+  company?: string;
+  sector?: string;
+  recruiter?: string;
+  reply?: string;
+}
+
+export async function getOutreaches(filters?: OutreachFilters): Promise<PaginatedResponse<Outreach>> {
+  const res = await api.get('/outreaches', { params: filters });
   return res.data;
 }
 

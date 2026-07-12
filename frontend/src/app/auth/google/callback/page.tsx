@@ -19,8 +19,8 @@ export default function GoogleCallbackPage() {
   }, [searchParams, router]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900">
-      <p className="text-gray-400">Completing sign in...</p>
+    <div className="flex items-center justify-center min-h-screen" style={{ background: 'var(--bg-secondary)' }}>
+      <p style={{ color: 'var(--text-secondary)' }}>Completing sign in...</p>
     </div>
   );
 }
