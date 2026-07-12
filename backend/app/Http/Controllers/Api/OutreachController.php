@@ -16,7 +16,7 @@ class OutreachController extends Controller
     {
         $query = Outreach::where('user_id', auth()->id());
 
-        $sortable = ['company', 'sector', 'recruiter', 'msg_sent', 'reply', 'next_action', 'created_at'];
+        $sortable = ['company', 'sector', 'recruiter', 'linkedin', 'msg_sent', 'reply', 'next_action', 'created_at'];
         $sort = in_array(request('sort'), $sortable) ? request('sort') : 'created_at';
         $direction = request('direction') === 'asc' ? 'asc' : 'desc';
 
