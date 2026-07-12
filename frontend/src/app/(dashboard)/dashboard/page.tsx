@@ -20,10 +20,14 @@ export default function DashboardPage() {
     queryFn: () => getOutreaches(filters),
   });
 
+  function refetchOutreaches() {
+    queryClient.invalidateQueries({ queryKey: ['outreaches'], refetchType: 'all' });
+  }
+
   const createMutation = useMutation({
     mutationFn: createOutreach,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['outreaches'] });
+      refetchOutreaches();
       setShowAddModal(false);
       toast.success('Outreach record created');
     },
@@ -35,7 +39,7 @@ export default function DashboardPage() {
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<Outreach> }) => updateOutreach(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['outreaches'] });
+      refetchOutreaches();
       setEditingOutreach(null);
       toast.success('Outreach record updated');
     },
@@ -47,7 +51,7 @@ export default function DashboardPage() {
   const deleteMutation = useMutation({
     mutationFn: deleteOutreach,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['outreaches'] });
+      refetchOutreaches();
       setDeletingOutreach(null);
       toast.success('Outreach record deleted');
     },
