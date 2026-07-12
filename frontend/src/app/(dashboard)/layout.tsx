@@ -16,6 +16,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [user, loading, router]);
 
+  useEffect(() => {
+    if (user && !user.email_verified_at && pathname !== '/verify-email') {
+      router.push('/verify-email');
+    }
+  }, [user, pathname, router]);
+
   if (loading || !user) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-900">
@@ -25,7 +31,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   if (!user.email_verified_at && pathname !== '/verify-email') {
-    router.push('/verify-email');
     return null;
   }
 

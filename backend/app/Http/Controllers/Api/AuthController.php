@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -66,19 +67,19 @@ class AuthController extends Controller
         return response()->json($request->user());
     }
 
-    public function googleRedirect(): JsonResponse
+    public function googleRedirect(): RedirectResponse
     {
-        return response()->json([
-            'url' => Socialite::driver('google')->stateless()->redirect()->getTargetUrl(),
-        ]);
+        return Socialite::driver('google')->stateless()->redirect();
     }
 
-    public function googleCallback(Request $request): JsonResponse
+    public function googleCallback(Request $request): RedirectResponse
     {
+        $frontendUrl = env('FRONTEND_URL', 'http://localhost:3000');
+
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Google authentication failed'], 400);
+            return redirect($frontendUrl . '/login?error=google_auth_failed');
         }
 
         $user = User::where('email', $googleUser->getEmail())->first();
@@ -100,9 +101,6 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth-token')->plainTextToken;
 
-        return response()->json([
-            'user' => $user,
-            'token' => $token,
-        ]);
+        return redirect($frontendUrl . '/auth/google/callback?token=' . $token);
     }
 }
