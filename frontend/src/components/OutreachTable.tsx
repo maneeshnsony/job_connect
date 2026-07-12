@@ -36,11 +36,34 @@ export default function OutreachTable({ data, isLoading, error, filters, onFilte
 
   if (isLoading) {
     return (
-      <div className="rounded-xl border p-6" style={{ background: 'var(--bg-card)', borderColor: 'var(--border)' }}>
-        <div className="animate-pulse space-y-3">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-10 rounded" style={{ background: 'var(--bg-input)' }} />
-          ))}
+      <div className="rounded-xl border overflow-hidden" style={{ background: 'var(--bg-card)', borderColor: 'var(--border)' }}>
+        <div className="flex items-center justify-center gap-3 py-4 border-b" style={{ borderColor: 'var(--border)' }}>
+          <svg className="w-5 h-5 animate-spin text-blue-600" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+          <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>Loading outreach records...</span>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b text-xs font-semibold uppercase tracking-wider" style={{ borderColor: 'var(--border)', color: 'var(--text-muted)' }}>
+                <th className="px-4 py-3 text-left">#</th>
+                {COLUMNS.map((col) => (
+                  <th key={col.key} className="px-4 py-3 text-left">{col.label}</th>
+                ))}
+                <th className="px-4 py-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="animate-pulse">
+              {[...Array(5)].map((_, i) => (
+                <tr key={i} className="border-b" style={{ borderColor: 'var(--border)' }}>
+                  <td className="px-4 py-3"><div className="h-4 w-6 rounded" style={{ background: 'var(--bg-input)' }} /></td>
+                  {[...Array(6)].map((_, j) => (
+                    <td key={j} className="px-4 py-3"><div className="h-4 rounded" style={{ background: 'var(--bg-input)', width: `${60 + Math.random() * 40}%` }} /></td>
+                  ))}
+                  <td className="px-4 py-3"><div className="h-4 w-16 rounded ml-auto" style={{ background: 'var(--bg-input)' }} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     );
