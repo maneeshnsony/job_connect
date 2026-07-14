@@ -1,0 +1,35 @@
+services:
+  redis:
+    deploy:
+      replicas: 1
+
+  backend:
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.50"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - LOG_CHANNEL=json
+      - SESSION_DRIVER=redis
+      - CACHE_STORE=redis
+      - QUEUE_CONNECTION=redis
+
+  frontend:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.50"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+    environment:
+      - NODE_ENV=production
