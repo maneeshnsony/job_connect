@@ -10,6 +10,8 @@ interface Props {
   onFilterChange: (filters: OutreachFilters) => void;
   onEdit: (outreach: Outreach) => void;
   onDelete: (outreach: Outreach) => void;
+  onViewNotes: (outreach: Outreach) => void;
+  onAddNote: (outreach: Outreach) => void;
 }
 
 const COLUMNS = [
@@ -22,7 +24,7 @@ const COLUMNS = [
   { key: 'next_action', label: 'Next Action' },
 ];
 
-export default function OutreachTable({ data, isLoading, error, filters, onFilterChange, onEdit, onDelete }: Props) {
+export default function OutreachTable({ data, isLoading, error, filters, onFilterChange, onEdit, onDelete, onViewNotes, onAddNote }: Props) {
   function toggleSort(key: string) {
     if (filters.sort === key) {
       onFilterChange({ ...filters, direction: filters.direction === 'asc' ? 'desc' : 'asc' });
@@ -102,7 +104,7 @@ export default function OutreachTable({ data, isLoading, error, filters, onFilte
                   </span>
                 </th>
               ))}
-              <th className="px-4 py-3 text-right w-24">Actions</th>
+              <th className="px-4 py-3 text-right w-40">Actions</th>
             </tr>
             <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
               <td className="px-4 py-2"></td>
@@ -168,6 +170,12 @@ export default function OutreachTable({ data, isLoading, error, filters, onFilte
                   <td className="px-4 py-3 max-w-[200px] truncate" style={{ color: 'var(--text-secondary)' }}>{outreach.next_action || '-'}</td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex items-center justify-end gap-1">
+                      <button onClick={() => onViewNotes(outreach)} className="p-1.5 rounded-lg transition hover:bg-blue-50 dark:hover:bg-blue-900/20" style={{ color: 'var(--text-muted)' }} title={`View notes${outreach.notes_count > 0 ? ` (${outreach.notes_count})` : ''}`}>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                      </button>
+                      <button onClick={() => onAddNote(outreach)} className="p-1.5 rounded-lg transition hover:bg-green-50 dark:hover:bg-green-900/20" style={{ color: 'var(--text-muted)' }} title="Add note">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                      </button>
                       <button onClick={() => onEdit(outreach)} className="p-1.5 rounded-lg transition hover:bg-gray-100 dark:hover:bg-gray-700" style={{ color: 'var(--text-muted)' }} title="Edit">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                       </button>

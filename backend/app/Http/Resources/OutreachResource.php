@@ -18,6 +18,7 @@ class OutreachResource extends JsonResource
             'msg_sent' => $this->msg_sent?->format('Y-m-d'),
             'reply' => $this->reply,
             'next_action' => $this->next_action,
+            'notes_count' => $this->notes_count,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -9,6 +9,14 @@ export interface Outreach {
   msg_sent: string | null;
   reply: string | null;
   next_action: string | null;
+  notes_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OutreachNote {
+  id: number;
+  note: string;
   created_at: string;
   updated_at: string;
 }
@@ -49,4 +57,18 @@ export async function updateOutreach(id: number, data: Partial<Outreach>): Promi
 
 export async function deleteOutreach(id: number): Promise<void> {
   await api.delete(`/outreaches/${id}`);
+}
+
+export async function getOutreachNotes(outreachId: number): Promise<OutreachNote[]> {
+  const res = await api.get(`/outreaches/${outreachId}/notes`);
+  return res.data.data;
+}
+
+export async function createOutreachNote(outreachId: number, note: string): Promise<OutreachNote> {
+  const res = await api.post(`/outreaches/${outreachId}/notes`, { note });
+  return res.data;
+}
+
+export async function deleteOutreachNote(outreachId: number, noteId: number): Promise<void> {
+  await api.delete(`/outreaches/${outreachId}/notes/${noteId}`);
 }

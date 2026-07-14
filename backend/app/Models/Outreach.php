@@ -6,6 +6,7 @@ use Database\Factories\OutreachFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Outreach extends Model
 {
@@ -23,6 +24,8 @@ class Outreach extends Model
         'next_action',
     ];
 
+    protected $withCount = ['notes'];
+
     protected function casts(): array
     {
         return [
@@ -33,5 +36,10 @@ class Outreach extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function notes(): HasMany
+    {
+        return $this->hasMany(OutreachNote::class);
     }
 }

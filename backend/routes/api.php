@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\OutreachController;
+use App\Http\Controllers\Api\OutreachNoteController;
 use App\Http\Controllers\Api\VerificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,5 +24,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware('verified')->group(function () {
         Route::apiResource('outreaches', OutreachController::class);
+
+        Route::get('outreaches/{outreach}/notes', [OutreachNoteController::class, 'index']);
+        Route::post('outreaches/{outreach}/notes', [OutreachNoteController::class, 'store']);
+        Route::delete('outreaches/{outreach}/notes/{note}', [OutreachNoteController::class, 'destroy']);
     });
 });

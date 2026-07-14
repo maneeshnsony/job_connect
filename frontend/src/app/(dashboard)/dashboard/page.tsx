@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getOutreaches, createOutreach, updateOutreach, deleteOutreach, Outreach, OutreachFilters } from '@/lib/api';
 import OutreachTable from '@/components/OutreachTable';
 import OutreachModal from '@/components/OutreachModal';
+import OutreachNoteModal from '@/components/OutreachNoteModal';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -13,6 +14,8 @@ export default function DashboardPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingOutreach, setEditingOutreach] = useState<Outreach | null>(null);
   const [deletingOutreach, setDeletingOutreach] = useState<Outreach | null>(null);
+  const [noteOutreachId, setNoteOutreachId] = useState<number | null>(null);
+  const [addNoteOutreachId, setAddNoteOutreachId] = useState<number | null>(null);
   const [filters, setFilters] = useState<OutreachFilters>({ sort: 'created_at', direction: 'desc' });
 
   const { data, isLoading, error } = useQuery({
@@ -81,6 +84,8 @@ export default function DashboardPage() {
         onFilterChange={setFilters}
         onEdit={(outreach) => setEditingOutreach(outreach)}
         onDelete={(outreach) => setDeletingOutreach(outreach)}
+        onViewNotes={(outreach) => setNoteOutreachId(outreach.id)}
+        onAddNote={(outreach) => setAddNoteOutreachId(outreach.id)}
       />
 
       {(showAddModal || editingOutreach) && (
@@ -95,6 +100,13 @@ export default function DashboardPage() {
             }
           }}
           saving={createMutation.isPending || updateMutation.isPending}
+        />
+      )}
+
+      {(noteOutreachId || addNoteOutreachId) && (
+        <OutreachNoteModal
+          outreachId={noteOutreachId || addNoteOutreachId!}
+          onClose={() => { setNoteOutreachId(null); setAddNoteOutreachId(null); }}
         />
       )}
 

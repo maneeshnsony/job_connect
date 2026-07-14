@@ -172,11 +172,37 @@
 - [x] Google callback page uses CSS variables instead of hardcoded `bg-gray-900`
 - [x] **Test**: `/login` and `/register` routes render correctly after fresh Docker build
 
+## Outreach Notes Feature
+
+### Step 17: Outreach Notes (1:N Relationship)
+- [x] Create migration for `outreach_notes` table (outreach_id FK, note text, timestamps, composite index)
+- [x] Create `OutreachNote` model with `belongsTo(Outreach)` relationship
+- [x] Update `Outreach` model with `hasMany(OutreachNote)` relationship and `$withCount = ['notes']`
+- [x] Create `StoreOutreachNoteRequest` validation (note required, string, max:2000)
+- [x] Create `OutreachNoteResource` for JSON transformation
+- [x] Create `OutreachNoteController` with: index (notes list, latest first), store (create), destroy (delete)
+- [x] Register nested REST routes: `GET/POST /api/outreaches/{outreach}/notes`, `DELETE /api/outreaches/{outreach}/notes/{note}`
+- [x] Update `OutreachResource` to include `notes_count` in response
+- [x] Update `Outreach` TypeScript interface with `notes_count`
+- [x] Add API client functions: `getOutreachNotes`, `createOutreachNote`, `deleteOutreachNote`
+- [x] Create `OutreachNoteModal` component — shows notes list (latest first, with timestamps), add note form, delete with confirmation
+- [x] Add "View Notes" icon (chat bubble) and "Add Note" icon (circle-plus) to action column in `OutreachTable`
+- [x] Widen action column from `w-24` to `w-40` for 4 action buttons
+- [x] Wire up note modal state and callbacks in `DashboardPage`
+- [x] **Test**: `php artisan migrate` creates outreach_notes table
+- [x] **Test**: All note routes registered in `php artisan route:list`
+- [x] **Test**: Frontend TypeScript compiles without errors
+
 ## Final Verification
 
-### Step 17: Full Integration Test
+### Step 18: Full Integration Test
 - [x] Google OAuth flow from redirect to callback to dashboard
 - [x] Outreach CRUD with sort/filter via UI
+- [x] Notes: view, add, and delete via note modal
+- [x] Notes appear in latest-to-oldest order
+- [x] `notes_count` displays on view notes button hover
+- [x] Cascade delete: notes removed when outreach is deleted
+- [x] Authorization: only outreach owner can view/add/delete notes
 - [x] 401 handling — redirects to login on expired token (not on network errors)
 - [x] Light/dark theme with per-user persistence (CSS variables + `theme` column)
 - [x] Docker compose up runs all services together
