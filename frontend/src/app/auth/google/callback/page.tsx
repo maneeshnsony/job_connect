@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function GoogleCallbackPage() {
+function CallbackHandler() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -19,8 +19,16 @@ export default function GoogleCallbackPage() {
   }, [searchParams, router]);
 
   return (
+    <p style={{ color: 'var(--text-secondary)' }}>Completing sign in...</p>
+  );
+}
+
+export default function GoogleCallbackPage() {
+  return (
     <div className="flex items-center justify-center min-h-screen" style={{ background: 'var(--bg-secondary)' }}>
-      <p style={{ color: 'var(--text-secondary)' }}>Completing sign in...</p>
+      <Suspense fallback={<p style={{ color: 'var(--text-secondary)' }}>Completing sign in...</p>}>
+        <CallbackHandler />
+      </Suspense>
     </div>
   );
 }
